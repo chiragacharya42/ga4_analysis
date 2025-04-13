@@ -1,7 +1,7 @@
--- Silver Layer: Cleaned & Filtered Purchase Events
--- This table filters only 'purchase' events from the bronze layer.
--- It removes rows with missing or deleted traffic source values.
--- This serves as a clean, denormalized input for reporting in the gold layer.
+-- Silver Layer: Cleans and filters the raw event data.
+-- Extracts only 'purchase' events with valid traffic source mediums.
+-- Outputs key fields like event_date, traffic source, session ID, and revenue.
+-- Used to create a normalized dataset ready for business reporting.
 
 
 config {

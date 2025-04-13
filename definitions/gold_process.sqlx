@@ -1,7 +1,8 @@
 -- Gold Layer: Monthly Aggregated Report by Traffic Source
 -- This business table aggregates purchases monthly by traffic_source.medium.
--- Performance Indicator : Total purchase value, total items purchased, and average items per purchase.
+-- Calculate Key Values : Total purchase value, total items purchased, and average items per purchase.
 -- It joins silver (cleaned purchase events) and bronze (raw ecommerce metrics) tables.
+-- Helps analyze top-performing marketing channels.
 
 config {
   type: "table",
