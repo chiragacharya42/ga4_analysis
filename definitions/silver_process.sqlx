@@ -1,0 +1,23 @@
+-- Silver Layer: Cleans and filters the raw event data.
+-- Extracts only 'purchase' events with valid traffic source mediums.
+-- Outputs key fields like event_date, traffic source, session ID, and revenue.
+-- Used to create a normalized dataset ready for business reporting.
+
+
+config {
+  type: "table",
+  schema: "dataform"
+}
+
+SELECT
+  event_date,
+  traffic_source.medium,
+  user_pseudo_id,
+  event_bundle_sequence_id AS ga_session_id,
+  ecommerce.purchase_revenue_in_usd AS event_value_in_usd
+FROM
+  ${ref("bronze_process")}
+WHERE
+  event_name = 'purchase'
+  AND traffic_source.medium IS NOT NULL
+  AND traffic_source.medium NOT IN ('(not set)', '(data deleted)')

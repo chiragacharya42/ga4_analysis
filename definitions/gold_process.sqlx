@@ -1,0 +1,33 @@
+-- Gold Layer: Monthly Aggregated Report by Traffic Source
+-- This business table aggregates purchases monthly by traffic_source.medium.
+-- Calculate Key Values : Total purchase value, total items purchased, and average items per purchase.
+-- It joins silver (cleaned purchase events) and bronze (raw ecommerce metrics) tables.
+-- Helps analyze top-performing marketing channels.
+
+config {
+  type: "table",
+  schema: "dataform"
+}
+
+SELECT
+  FORMAT_DATE('%Y-%m', PARSE_DATE('%Y%m%d', s.event_date)) AS purchase_month,
+  s.medium AS traffic_source_medium,
+  SUM(s.event_value_in_usd) AS total_purchase_value_usd,
+  SUM(b.ecommerce.total_item_quantity) AS total_items_purchased,
+  SAFE_DIVIDE(SUM(b.ecommerce.total_item_quantity), COUNT(DISTINCT s.ga_session_id)) AS avg_items_per_purchase
+FROM
+  ${ref("silver_process")} AS s
+JOIN
+  ${ref("bronze_process")} AS b
+ON
+  s.user_pseudo_id = b.user_pseudo_id
+  AND s.event_date = b.event_date
+  AND s.ga_session_id = b.event_bundle_sequence_id
+WHERE
+  b.ecommerce.total_item_quantity IS NOT NULL
+GROUP BY
+  purchase_month,
+  traffic_source_medium
+ORDER BY
+  total_purchase_value_usd DESC
+
