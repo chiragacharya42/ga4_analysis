@@ -1,0 +1,5 @@
+defaultProject: careful-chimera-450510-d6
+defaultLocation: US
+defaultDataset: dataform
+defaultAssertionDataset: dataform_assertions
+dataformCoreVersion: 3.0.0
